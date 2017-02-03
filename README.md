@@ -44,4 +44,4 @@ docker-compose exec workspace bash
 
 ## Author
 
-* [**Eduardo Fernández**](https://github.com/sibirahey)
+* [**Eduardo Fernández**](https://sibirahey.github.io/)
