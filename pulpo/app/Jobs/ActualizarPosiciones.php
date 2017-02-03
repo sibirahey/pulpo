@@ -30,16 +30,17 @@ class ActualizarPosiciones implements ShouldQueue
      */
     public function handle()
     {
-      sleep(10);
+      sleep(1);
       $num = Redis::get('num');
       Redis::set('num',$num + 1);
+      Redis::publish('pulso', json_encode(['foo' => 'bar']));
       //ver nuevos vehiculos
       //actualzar posiciones
         //verificar Pausa si pausa enviar a cola de pausa
-        if(Redis::get('switch')=="false"){
-          $job = new ActualizarPosiciones();
-          //$job->delay(Carbon::now()->addSeconds(100));
-          dispatch($job);
-        }
+      if(Redis::get('switch')=="false"){
+        $job = new ActualizarPosiciones();
+        //$job->delay(Carbon::now()->addSeconds(100));
+        dispatch($job);
+      }
     }
 }

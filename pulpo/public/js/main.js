@@ -1,7 +1,7 @@
 
 angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
   .value("url","/motor")
-  .value('socketURL','localhost')
+  .value('socketURL',"localhost:5000")
   .config(function(uiGmapGoogleMapApiProvider) {
     uiGmapGoogleMapApiProvider.configure({
       transport: 'https',
@@ -13,10 +13,19 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
       preventLoad: false,
     });
   })
-  .service('servicio',function($http, url) {
-    return {
-        interruptor: interruptor
+  .service('socket', function ($rootScope,socketURL) {
+    var socket = io.connect(socketURL);
+    return { on: on };
+    function on (eventName, callback) {
+      socket.on(eventName, function (data) {
+        $rootScope.$apply(function () {
+          callback(data);
+        });
+      });
     }
+  })
+  .service('servicio',function($http, url) {
+    return { interruptor: interruptor };
     function interruptor (toggle) {
         if(toggle){
           ruta = url + "/start";
@@ -26,7 +35,7 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
         return $http.get(ruta);
     }
   })
-  .controller('controlador', function(servicio) {
+  .controller('controlador', function(servicio,socket) {
     var ctrl = this;
     ctrl.ruta = [{longitude:-99.196364 ,latitude:19.434448},
     {longitude:-99.196413 ,latitude:19.434456},
@@ -69,14 +78,17 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
 
     ctrl.pos = 1;
     ctrl.onChange = function(toggle) {
-      ctrl.marker.coords = ctrl.ruta[ctrl.pos++];
-
-      // servicio.interruptor(toggle)
-      //   .then(function(message) {
-      //       ctrl.message = message.data.estado;
-      //   })
-      //   .catch(function(err) {
-      //       // Tratar el error
-      //   });
+      servicio.interruptor(toggle)
+        .then(function(message) {
+            ctrl.message = message.data.estado;
+        })
+        .catch(function(err) {
+            // Tratar el error
+        });
     };
+    ctrl.inicio = function(data){
+      console.log(data);
+      ctrl.marker.coords = ctrl.ruta[ctrl.pos++];
+    };
+    socket.on('change:pos', ctrl.inicio);
   });
