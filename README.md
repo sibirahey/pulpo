@@ -33,7 +33,7 @@ docker-compose exec workspace bash
 
 ## Built With
 
-* [Docker](http://www.dropwizard.io/1.0.2/docs/) -
+* [Docker](http://www.dropwizard.io/1.0.2/docs/)
 * [Laravel](https://laravel.com/)
 * [Nginx](https://www.nginx.com/)
 * [Redis](https://redis.io/)
@@ -44,4 +44,4 @@ docker-compose exec workspace bash
 
 ## Author
 
-* **Eduardo Fernández** - [sibirahey](https://github.com/sibirahey)
+* [**Eduardo Fernández**](https://github.com/sibirahey)
