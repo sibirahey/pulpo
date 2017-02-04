@@ -2,7 +2,7 @@
 angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
   .value("url","/motor")
   .value('socketURL',"localhost:5000")
-  .config(function(uiGmapGoogleMapApiProvider) {
+  .config(function(uiGmapGoogleMapApiProvider,$mdIconProvider) {
     uiGmapGoogleMapApiProvider.configure({
       transport: 'https',
       isGoogleMapsForWork: false,
@@ -12,6 +12,8 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
       language: 'en',
       preventLoad: false,
     });
+    $mdIconProvider
+      .icon('moto', 'img/icons/moto.svg',24);
   })
   .service('socket', function ($rootScope,socketURL) {
     var socket = io.connect(socketURL);
@@ -35,7 +37,7 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
         return $http.get(ruta);
     }
   })
-  .controller('controlador', function(servicio,socket) {
+  .controller('controlador', function(servicio,socket,$mdSidenav) {
     var ctrl = this;
     ctrl.ruta = [{longitude:-99.196364 ,latitude:19.434448},
     {longitude:-99.196413 ,latitude:19.434456},
@@ -61,8 +63,11 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
     {longitude:-99.200874 ,latitude:19.440618},
     {longitude:-99.200864 ,latitude:19.440474},
     {longitude:-99.200901 ,latitude:19.439692},
-      {longitude:-99.200955 ,latitude:19.438679}];
+    {longitude:-99.200955 ,latitude:19.438679}];
 
+    ctrl.toggleNav = function () {
+      $mdSidenav('left').toggle();
+    }
 
     ctrl.map = {
       center: {latitude: 19.4339562, longitude: -99.1969541},

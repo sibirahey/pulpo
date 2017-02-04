@@ -21,14 +21,27 @@
         </style>
     </head>
     <body>
-      <div ng-controller="controlador as ctrl">
-        <md-switch ng-model="interruptor" ng-change="ctrl.onChange(interruptor)">
-          Switch: {{ctrl.message}}
-        </md-switch>
-        <ui-gmap-google-map center="ctrl.map.center" zoom="ctrl.map.zoom" options="ctrl.map.options">
-          <ui-gmap-marker coords="ctrl.marker.coords" options="ctrl.marker.options" idkey="ctrl.marker.id">
-          </ui-gmap-marker>
-        </ui-gmap-google-map>
+      <div ng-controller="controlador as ctrl" ng-cloak layout="column">
+        <md-toolbar layout="row" class="md-toolbar-tools">
+          <md-button class="md-icon-button" hide-gt-sm ng-click="ctrl.toggleNav()">
+            <md-icon md-svg-icon="moto" class="md-accent"></md-icon>
+          </md-button>
+          <h1>Pulpo</h1>
+        </md-toolbar>
+        <div flex layout="row">
+          <md-sidenav class="md-whiteframe-4dp" md-is-locked-open="$mdMedia('gt-sm')"
+            md-component-id="left" ng-click="app.toggleList()">
+            <md-switch ng-model="interruptor" ng-change="ctrl.onChange(interruptor)">
+              Switch: {{ctrl.message}}
+            </md-switch>
+          </md-sidenav>
+          <md-content flex id="content">
+            <ui-gmap-google-map center="ctrl.map.center" zoom="ctrl.map.zoom" options="ctrl.map.options">
+              <ui-gmap-marker coords="ctrl.marker.coords" options="ctrl.marker.options" idkey="ctrl.marker.id">
+              </ui-gmap-marker>
+            </ui-gmap-google-map>
+          </md-content>
+        </div>
       </div>
     </body>
 </html>
