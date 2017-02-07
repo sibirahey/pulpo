@@ -36,7 +36,7 @@
               <md-switch md-invert ng-model="interruptor" ng-change="ctrl.onChange(interruptor)">
                 Encender/Apagar
               </md-switch>
-              <md-button class="md-raised md-primary">Agregar</md-button>
+              <md-button class="md-raised md-primary" ng-click="ctrl.nuevo()">Agregar</md-button>
             </div>
           </md-sidenav>
           <md-content flex id="content">

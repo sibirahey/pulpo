@@ -27,7 +27,10 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
     }
   })
   .service('servicio',function($http, url) {
-    return { interruptor: interruptor };
+    return {
+      interruptor: interruptor,
+      nuevo: nuevoMarker
+    };
     function interruptor (toggle) {
         if(toggle){
           ruta = url + "/start";
@@ -36,49 +39,40 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
         }
         return $http.get(ruta);
     }
+
+    function nuevoMarker(data){
+      return $http.post("/marker",data);
+    }
   })
   .controller('controlador', function(servicio,socket,$mdSidenav) {
     var ctrl = this;
-    ctrl.ruta = [{longitude:-99.196364 ,latitude:19.434448},
-    {longitude:-99.196413 ,latitude:19.434456},
-    {longitude:-99.196596 ,latitude:19.434465},
-    {longitude:-99.196773 ,latitude:19.434442},
-    {longitude:-99.196995 ,latitude:19.434407},
-    {longitude:-99.197205 ,latitude:19.434330},
-    {longitude:-99.197351 ,latitude:19.434230},
-    {longitude:-99.197495 ,latitude:19.434115},
-    {longitude:-99.198209 ,latitude:19.434169},
-    {longitude:-99.198956 ,latitude:19.434217},
-    {longitude:-99.199729 ,latitude:19.434282},
-    {longitude:-99.200449 ,latitude:19.434322},
-    {longitude:-99.201433 ,latitude:19.434470},
-    {longitude:-99.201208 ,latitude:19.435975},
-    {longitude:-99.201196 ,latitude:19.436054},
-    {longitude:-99.201186 ,latitude:19.436111},
-    {longitude:-99.200842 ,latitude:19.438237},
-    {longitude:-99.200830 ,latitude:19.438477},
-    {longitude:-99.200772 ,latitude:19.439692},
-    {longitude:-99.200726 ,latitude:19.440522},
-    {longitude:-99.200708 ,latitude:19.440683},
-    {longitude:-99.200874 ,latitude:19.440618},
-    {longitude:-99.200864 ,latitude:19.440474},
-    {longitude:-99.200901 ,latitude:19.439692},
-    {longitude:-99.200955 ,latitude:19.438679}];
+    ctrl.ruta =
 
     ctrl.toggleNav = function () {
       $mdSidenav('left').toggle();
     }
 
     ctrl.map = {
-      center: {latitude: 19.4339562, longitude: -99.1969541},
+       center: {latitude: 19.4346219, longitude: -99.1796127},
       //scrollwheel: false,
       zoom: 14,
-      options: {scrollwheel: false}
+      options: {scrollwheel: false},
+      bounds:{
+        southwest:{
+          latitude: 19.409043,
+          longitude: -99.139787
+        },
+        northeast:{
+          latitude: 19.454856,
+          longitude: -99.214803
+        }
+      }
     };
+
 
     ctrl.marker = {
       id: 0,
-      coords: ctrl.ruta[0]
+      coords: {latitude: 19.4346219, longitude: -99.1796127}
     };
 
     ctrl.pos = 1;
@@ -90,6 +84,15 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
         .catch(function(err) {
             // Tratar el error
         });
+    };
+    ctrl.nuevo = function(){
+      servicio.nuevo(ctrl.map.bounds)
+      .then(function(resp){
+        console.log(resp);
+      })
+      .catch(function(err) {
+        // Tratar el error
+      });
     };
     ctrl.inicio = function(data){
       console.log(data);

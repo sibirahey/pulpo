@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 Route::resource('motor', 'MotorController',['only' => ['show']]);
+Route::resource('marker', 'MarkerController',['only' => ['store','update']]);
