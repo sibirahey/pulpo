@@ -27,13 +27,17 @@
             <md-icon md-svg-icon="moto" class="md-accent"></md-icon>
           </md-button>
           <h1>Pulpo</h1>
+          <md-button class="md-warn">{{ctrl.message}}</md-button>
         </md-toolbar>
         <div flex layout="row">
           <md-sidenav class="md-whiteframe-4dp" md-is-locked-open="$mdMedia('gt-sm')"
             md-component-id="left" ng-click="app.toggleList()">
-            <md-switch ng-model="interruptor" ng-change="ctrl.onChange(interruptor)">
-              Switch: {{ctrl.message}}
-            </md-switch>
+            <div layout="column" layout-padding layout-margin layout-fill >
+              <md-switch md-invert ng-model="interruptor" ng-change="ctrl.onChange(interruptor)">
+                Encender/Apagar
+              </md-switch>
+              <md-button class="md-raised md-primary">Agregar</md-button>
+            </div>
           </md-sidenav>
           <md-content flex id="content">
             <ui-gmap-google-map center="ctrl.map.center" zoom="ctrl.map.zoom" options="ctrl.map.options">
