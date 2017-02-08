@@ -41,7 +41,7 @@
           </md-sidenav>
           <md-content flex id="content">
             <ui-gmap-google-map center="ctrl.map.center" zoom="ctrl.map.zoom" options="ctrl.map.options">
-              <ui-gmap-marker coords="ctrl.marker.coords" options="ctrl.marker.options" idkey="ctrl.marker.id">
+              <ui-gmap-marker ng-repeat="(key, value) in ctrl.markers" coords="value" idkey="key">
               </ui-gmap-marker>
             </ui-gmap-google-map>
           </md-content>

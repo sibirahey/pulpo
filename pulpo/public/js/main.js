@@ -68,12 +68,7 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
         }
       }
     };
-
-
-    ctrl.marker = {
-      id: 0,
-      coords: {latitude: 19.4346219, longitude: -99.1796127}
-    };
+    ctrl.markers = {};
 
     ctrl.pos = 1;
     ctrl.onChange = function(toggle) {
@@ -95,8 +90,9 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
       });
     };
     ctrl.inicio = function(data){
-      console.log(JSON.parse(data));
-      ctrl.marker.coords = JSON.parse(data);
+      // console.log(JSON.parse(data));
+      jsonData = JSON.parse(data);
+      ctrl.markers[jsonData.key] = jsonData.coords;
     };
     socket.on('change:pos', ctrl.inicio);
   });

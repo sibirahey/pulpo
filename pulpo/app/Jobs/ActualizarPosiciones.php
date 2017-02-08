@@ -31,10 +31,13 @@ class ActualizarPosiciones implements ShouldQueue
     public function handle()
     {
       $markers = Redis::smembers('markers');
-      foreach ($markers as $mark) {
-        sleep(10);
+      foreach ($markers as $id) {
+        sleep(5);
         //pop de lista -actualzar posiciones
-        Redis::publish('pulso', Redis::get($mark));
+        $mark = new \stdClass();
+        $mark->key = $id;
+        $mark->coords = json_decode(Redis::get($id));
+        Redis::publish('pulso', json_encode($mark));
       }
       if(Redis::get('switch')=="false"){
         $job = new ActualizarPosiciones();
