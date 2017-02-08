@@ -6,12 +6,12 @@ use Illuminate\Support\Facades\Redis;
 
 class MarkerService
 {
-  public function guardar($northeast,$southwest)
+  public function guardar($ubicacion)
   {
-    //TODO:generar lugar de inicio por medio de los limites
-    //TODO:consultar rutas
-    //TODO:guardar en redis
-    //TODO:regresar id
-    return 55;
+    $id = uniqid();
+    //TODO:consultar y guardar ruta list de redis
+    Redis::set($id,json_encode($ubicacion));
+    Redis::sadd('markers',$id);
+    return $id;
   }
 }

@@ -11,10 +11,7 @@ var client = redis.createClient({host:"redis"});
 
 sub.on("message", function (channel, message) {
     console.log("sub channel " + channel + ": " + message);
-    client.get("num", function(err, reply) {
-      console.log(reply);
-      io.emit('change:pos', reply);
-    });
+    io.emit('change:pos', message);
 });
 sub.subscribe("pulso");
 

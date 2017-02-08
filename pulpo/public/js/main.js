@@ -53,18 +53,18 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
     }
 
     ctrl.map = {
-       center: {latitude: 19.4346219, longitude: -99.1796127},
+       center: {latitude: "19.4346219", longitude: "-99.1796127"},
       //scrollwheel: false,
       zoom: 14,
       options: {scrollwheel: false},
       bounds:{
         southwest:{
-          latitude: 19.409043,
-          longitude: -99.139787
+          latitude: "19.409043",
+          longitude: "-99.139787"
         },
         northeast:{
-          latitude: 19.454856,
-          longitude: -99.214803
+          latitude: "19.454856",
+          longitude: "-99.214803"
         }
       }
     };
@@ -95,8 +95,8 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
       });
     };
     ctrl.inicio = function(data){
-      console.log(data);
-      ctrl.marker.coords = ctrl.ruta[ctrl.pos++];
+      console.log(JSON.parse(data));
+      ctrl.marker.coords = JSON.parse(data);
     };
     socket.on('change:pos', ctrl.inicio);
   });

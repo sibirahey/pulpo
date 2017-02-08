@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\MarkerService;
 
+use App\Helpers\Utils;
+
 class MarkerController extends Controller
 {
     protected $markers;
@@ -23,7 +25,8 @@ class MarkerController extends Controller
     {
         $northeast = $request->input('northeast');
         $southwest = $request->input('southwest');
-        return $this->markers->guardar($northeast,$southwest);
+        $ubicacion = Utils::randUbicacion($northeast,$southwest);
+        return $this->markers->guardar($ubicacion);
     }
 
     /**
