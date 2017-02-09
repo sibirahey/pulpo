@@ -9,16 +9,22 @@ use Illuminate\Support\Facades\Redis;
 
 class MotorController extends Controller
 {
+
+  public function index()
+  {
+    return Redis::get('switch');
+  }
+
   public function show($op)
   {
     switch ($op) {
       case "start":
-        Redis::set('switch',"false");
+        Redis::set('switch',"start");
         dispatch(new ActualizarPosiciones());
-        return response()->json(['estado' => 'ENCENDIDO']);
+        return "start";//response()->json(['estado' => 'ENCENDIDO']);
       case "stop":
-        Redis::set('switch',"true");
-        return response()->json(['estado' => 'APAGADO']);
+        Redis::set('switch',"stop");
+        return "stop";//response()->json(['estado' => 'APAGADO']);
     }
     return response()->json(['message' => 'Record not found'],404);
   }

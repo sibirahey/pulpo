@@ -33,7 +33,7 @@
           <md-sidenav class="md-whiteframe-4dp" md-is-locked-open="$mdMedia('gt-sm')"
             md-component-id="left" ng-click="app.toggleList()">
             <div layout="column" layout-padding layout-margin layout-fill >
-              <md-switch md-invert ng-model="interruptor" ng-change="ctrl.onChange(interruptor)">
+              <md-switch md-invert ng-model="ctrl.interruptor" ng-change="ctrl.onChange(ctrl.interruptor)">
                 Encender/Apagar
               </md-switch>
               <md-button class="md-raised md-primary" ng-click="ctrl.nuevo()">Agregar</md-button>

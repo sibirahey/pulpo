@@ -44,12 +44,14 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
       nuevo: nuevoMarker
     };
     function interruptor (toggle) {
-        if(toggle){
-          ruta = url + "/start";
-        }else{
-          ruta = url + "/stop";
-        }
-        return $http.get(ruta);
+      if(toggle === undefined){
+        ruta = url;
+      }else if(toggle){
+        ruta = url + "/start";
+      }else{
+        ruta = url + "/stop";
+      }
+      return $http.get(ruta);
     }
 
     function nuevoMarker(){
@@ -58,7 +60,21 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
   })
   .controller('controlador', function(servicio,socket,$mdSidenav) {
     var ctrl = this;
-    ctrl.ruta =
+
+    ctrl.estadoMotor = function(message){
+      if(message.data == "start"){
+        ctrl.interruptor = true;
+      }else if (message.data == "stop"){
+        ctrl.interruptor = false;
+      }
+      ctrl.message = ctrl.interruptor?"ENCENDIDO":"APAGADO";
+    }
+
+    servicio.interruptor()
+      .then(ctrl.estadoMotor)
+      .catch(function(err) {
+          // Tratar el error
+      });
 
     ctrl.toggleNav = function () {
       $mdSidenav('left').toggle();
@@ -84,16 +100,14 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
     };
     ctrl.markers = {};
 
-    ctrl.pos = 1;
     ctrl.onChange = function(toggle) {
       servicio.interruptor(toggle)
-        .then(function(message) {
-            ctrl.message = message.data.estado;
-        })
+        .then(ctrl.estadoMotor)
         .catch(function(err) {
             // Tratar el error
         });
     };
+
     ctrl.nuevo = function(){
       servicio.nuevo()
       .then(function(resp){
@@ -103,10 +117,12 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
         // Tratar el error
       });
     };
+
     ctrl.inicio = function(data){
       // console.log(JSON.parse(data));
       jsonData = JSON.parse(data);
       ctrl.markers[jsonData.key] = jsonData.coords;
     };
     socket.on('change:pos', ctrl.inicio);
+
   });

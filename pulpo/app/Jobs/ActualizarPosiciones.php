@@ -34,7 +34,7 @@ class ActualizarPosiciones implements ShouldQueue
     {
       $markers = Redis::smembers('markers');
       foreach ($markers as $id) {
-        sleep(1);
+        sleep(1);//TODO: esperar en milisegundos
         $coords = json_decode(Redis::lpop($id));
         $mark = new \stdClass();
         $mark->key = $id;
@@ -45,7 +45,7 @@ class ActualizarPosiciones implements ShouldQueue
         }
         Redis::publish('pulso', json_encode($mark));
       }
-      if(Redis::get('switch')=="false"){
+      if(Redis::get('switch')=="start"){
         $job = new ActualizarPosiciones();
         dispatch($job);
       }
