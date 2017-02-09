@@ -66,7 +66,7 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
 
     ctrl.boundsChanged = function (map) {
       bounds = JSON.stringify(map.getBounds().toJSON());
-      console.log(bounds);
+      // console.log(bounds);
       socket.emit(
         'change:bounds',
         bounds
