@@ -33,10 +33,10 @@ class ActualizarPosiciones implements ShouldQueue
       $markers = Redis::smembers('markers');
       foreach ($markers as $id) {
         sleep(5);
-        //pop de lista -actualzar posiciones
+        //TODO: validar si termino la ruta generar nueva ruta
         $mark = new \stdClass();
         $mark->key = $id;
-        $mark->coords = json_decode(Redis::get($id));
+        $mark->coords = json_decode(Redis::lpop($id));
         Redis::publish('pulso', json_encode($mark));
       }
       if(Redis::get('switch')=="false"){
