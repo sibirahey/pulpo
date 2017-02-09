@@ -41,6 +41,7 @@ pulpo.controller('controlador', function(servicio,socket,$mdSidenav) {
     }
   };
   ctrl.markers = {};
+  ctrl.rutas = [];
 
   ctrl.onChange = function(toggle) {
     servicio.interruptor(toggle)
