@@ -16,6 +16,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.min.js"></script>
 
         <script src="js/main.js"></script>
+        <script src="js/servicios.js"></script>
+        <script src="js/controlador.js"></script>
         <style>
           .angular-google-map-container { height: 500px;}
         </style>
