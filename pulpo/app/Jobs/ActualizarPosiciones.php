@@ -9,6 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Redis;
 
+use App\Services\MarkerService;
+
 class ActualizarPosiciones implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -28,15 +30,19 @@ class ActualizarPosiciones implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(MarkerService $markerService)
     {
       $markers = Redis::smembers('markers');
       foreach ($markers as $id) {
-        sleep(5);
-        //TODO: validar si termino la ruta generar nueva ruta
+        sleep(1);
+        $coords = json_decode(Redis::lpop($id));
         $mark = new \stdClass();
         $mark->key = $id;
-        $mark->coords = json_decode(Redis::lpop($id));
+        $mark->coords = $coords;
+        if(Redis::llen($id) == 0){
+          $destino = $markerService->nuevoPunto();
+          $markerService->generarRuta($id,$coords,$destino);
+        }
         Redis::publish('pulso', json_encode($mark));
       }
       if(Redis::get('switch')=="false"){
