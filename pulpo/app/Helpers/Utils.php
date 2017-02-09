@@ -4,10 +4,14 @@ namespace App\Helpers;
 
 class Utils {
 
- public static function randUbicacion($northeast,$southwest) {
+ public static function randUbicacion($limites) {
+  // east: -99.14695412303467
+  // north: 19.454208248638917
+  // south: 19.41373798403144
+  // west: -99.20900971080323
    $ubicacion = new \stdClass();
-   $ubicacion->latitude = Utils::float_rand( floatval($southwest["latitude"]), floatval($northeast["latitude"]),6);
-   $ubicacion->longitude = Utils::float_rand( floatval($southwest["longitude"]), floatval($northeast["longitude"]),6);
+   $ubicacion->latitude = Utils::float_rand( floatval($limites->south), floatval($limites->north),6);
+   $ubicacion->longitude = Utils::float_rand( floatval($limites->west), floatval($limites->east),6);
    return $ubicacion;
  }
 

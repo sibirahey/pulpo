@@ -17,6 +17,10 @@ sub.subscribe("pulso");
 
 io.on('connection', function(socket){
   console.log('a user connected');
+  socket.on('change:bounds', function(bounds){
+    console.log('bounds',bounds);
+    client.set("bounds", bounds);
+  });
 });
 
 http.listen(5000, function(){

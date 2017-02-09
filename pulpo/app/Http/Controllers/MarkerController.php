@@ -21,9 +21,9 @@ class MarkerController extends Controller
      */
     public function store(Request $request)
     {
-        $northeast = $request->input('northeast');
-        $southwest = $request->input('southwest');
-        return $this->markers->guardar($northeast,$southwest);
+        // $northeast = $request->input('northeast');
+        // $southwest = $request->input('southwest');
+        return $this->markers->guardar();
     }
 
     /**

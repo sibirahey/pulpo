@@ -17,9 +17,21 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
   })
   .service('socket', function ($rootScope,socketURL) {
     var socket = io.connect(socketURL);
-    return { on: on };
+    return {
+      on: on,
+      emit: emit
+    };
+
     function on (eventName, callback) {
       socket.on(eventName, function (data) {
+        $rootScope.$apply(function () {
+          callback(data);
+        });
+      });
+    }
+
+    function emit (eventName, data, callback) {
+      socket.emit(eventName, data, function (data) {
         $rootScope.$apply(function () {
           callback(data);
         });
@@ -40,8 +52,8 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
         return $http.get(ruta);
     }
 
-    function nuevoMarker(data){
-      return $http.post("/marker",data);
+    function nuevoMarker(){
+      return $http.post("/marker");
     }
   })
   .controller('controlador', function(servicio,socket,$mdSidenav) {
@@ -52,20 +64,22 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
       $mdSidenav('left').toggle();
     }
 
+    ctrl.boundsChanged = function (map) {
+      bounds = JSON.stringify(map.getBounds().toJSON());
+      console.log(bounds);
+      socket.emit(
+        'change:bounds',
+        bounds
+      );
+    }
+
     ctrl.map = {
        center: {latitude: "19.4346219", longitude: "-99.1796127"},
       //scrollwheel: false,
       zoom: 14,
       options: {scrollwheel: false},
-      bounds:{
-        southwest:{
-          latitude: "19.409043",
-          longitude: "-99.139787"
-        },
-        northeast:{
-          latitude: "19.454856",
-          longitude: "-99.214803"
-        }
+      events: {
+          bounds_changed: ctrl.boundsChanged
       }
     };
     ctrl.markers = {};
@@ -81,7 +95,7 @@ angular.module('pulpo', ['ngMaterial','uiGmapgoogle-maps'])
         });
     };
     ctrl.nuevo = function(){
-      servicio.nuevo(ctrl.map.bounds)
+      servicio.nuevo()
       .then(function(resp){
         console.log(resp);
       })

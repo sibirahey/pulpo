@@ -8,14 +8,20 @@ use App\Helpers\Utils;
 
 class MarkerService
 {
-  public function guardar($northeast,$southwest)
+  public function guardar()
   {
     $id = uniqid();
-    $ubicacion = Utils::randUbicacion($northeast,$southwest);
-    $destino = Utils::randUbicacion($northeast,$southwest);
+    $ubicacion = $this->nuevoPunto();
+    $destino = $this->nuevoPunto();
     $this->generarRuta($id,$ubicacion,$destino);
     Redis::sadd('markers',$id);
     return $id;
+  }
+
+  public function nuevoPunto()
+  {
+    $bounds = json_decode(Redis::get('bounds'));
+    return Utils::randUbicacion($bounds);
   }
 
   public function generarRuta($id,$inicio,$fin)
