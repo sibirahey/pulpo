@@ -15,6 +15,24 @@ class Utils {
    return $ubicacion;
  }
 
+//http://www.movable-type.co.uk/scripts/latlong.html
+ public static function distancia($uno,$dos){
+   if($uno == NULL || $dos == NULL){
+     return NULL;
+   }
+   $lon1 = deg2rad($uno->longitude);
+   $lat1 = deg2rad($uno->latitude);
+   $lon2 = deg2rad($dos->longitude);
+   $lat2 = deg2rad($dos->latitude);
+   $R = 6371000;
+   $dlon = $lon2 - $lon1;
+   $dlat = $lat2 - $lat1;
+   $a = pow(sin($dlat/2),2) + cos($lat1) * cos($lat2) * pow(sin($dlon/2),2);
+   $c = 2 * atan2( sqrt($a), sqrt(1-$a) );
+   $d = $R * $c; //(where R is the radius of the Earth)
+   return $d;
+ }
+
  public static function float_rand($Min, $Max, $round=0){
     //validate input
     if ($Min > $Max) {

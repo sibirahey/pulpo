@@ -27,7 +27,8 @@ pulpo.service('socket', function ($rootScope,socketURL) {
 pulpo.service('servicio',function($http, url) {
   return {
     interruptor: interruptor,
-    nuevo: nuevoMarker
+    nuevo: nuevoMarker,
+    solicitarServicio: solicitarServicio
   };
   function interruptor (toggle) {
     if(toggle === undefined){
@@ -42,5 +43,9 @@ pulpo.service('servicio',function($http, url) {
 
   function nuevoMarker(){
     return $http.post("/marker");
+  }
+
+  function solicitarServicio(id){
+    return $http.put("/marker/"+id);
   }
 });

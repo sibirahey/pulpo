@@ -43,9 +43,9 @@
           </md-sidenav>
           <md-content flex id="content">
             <ui-gmap-google-map center="ctrl.map.center" zoom="ctrl.map.zoom" options="ctrl.map.options" events="ctrl.map.events">
-              <ui-gmap-marker ng-repeat="(key, value) in ctrl.markers" coords="value" idkey="key">
+              <ui-gmap-marker ng-repeat="(key, value) in ctrl.markers" coords="value" idkey="key" click="ctrl.clicMarker(key)">
               </ui-gmap-marker>
-              <ui-gmap-polyline ng-repeat="p in ctrl.rutas" path="p.ruta" stroke="p.stroke"></ui-gmap-polyline>
+              <ui-gmap-polyline ng-repeat="(key, value) in ctrl.rutas" path="value" stroke="ctrl.stroke"></ui-gmap-polyline>
             </ui-gmap-google-map>
           </md-content>
         </div>

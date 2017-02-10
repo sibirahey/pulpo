@@ -45,6 +45,22 @@ class ActualizarPosiciones implements ShouldQueue
         }
         Redis::publish('pulso', json_encode($mark));
       }
+
+      $enServicio = Redis::smembers('enServicio');
+      foreach ($enServicio as $element) {
+        sleep(1);//TODO: esperar en milisegundos
+        $coords = json_decode(Redis::lpop($element));
+        $mark = new \stdClass();
+        $mark->key = $element;
+        $mark->coords = $coords;
+        if(Redis::llen($element) == 0){
+          Redis::srem('enServicio',$element);
+          Redis::del($element);
+          // Redis::publish('pulso', $element);
+        }
+        Redis::publish('pulso', json_encode($mark));
+      }
+
       if(Redis::get('switch')=="start"){
         $job = new ActualizarPosiciones();
         dispatch($job);

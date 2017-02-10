@@ -1,6 +1,6 @@
 pulpo = angular.module('pulpo');
 
-pulpo.controller('controlador', function(servicio,socket,$mdSidenav) {
+pulpo.controller('controlador', function(servicio,socket,$mdSidenav,$mdDialog) {
   var ctrl = this;
 
   ctrl.estadoMotor = function(message){
@@ -41,7 +41,11 @@ pulpo.controller('controlador', function(servicio,socket,$mdSidenav) {
     }
   };
   ctrl.markers = {};
-  ctrl.rutas = [];
+  ctrl.rutas = {};
+  ctrl.stroke= {
+      color: '#6060FB',
+      weight: 3
+  };
 
   ctrl.onChange = function(toggle) {
     servicio.interruptor(toggle)
@@ -67,5 +71,31 @@ pulpo.controller('controlador', function(servicio,socket,$mdSidenav) {
     ctrl.markers[jsonData.key] = jsonData.coords;
   };
   socket.on('change:pos', ctrl.inicio);
+
+  //TODO:eliminar ruta de array y markers
+  ctrl.delete = function(data){
+    // console.log(JSON.parse(data));
+    jsonData = JSON.parse(data);
+    ctrl.markers[jsonData.key] = jsonData.coords;
+  };
+  socket.on('delete', ctrl.delete);
+
+  ctrl.clicMarker = function(id){
+    var confirm = $mdDialog.confirm()
+          .title('¿Necesita un servicio?')
+          .textContent('Este marcador permanecerá estático y el más cercano trazara una ruta hacia este, al encontrarse ambos desaparecerán.')
+          .ok('SI')
+          .cancel('NO');
+
+    $mdDialog.show(confirm).then(function() {
+      servicio.solicitarServicio(id)
+        .then(function(data) {
+          ctrl.rutas[data.data.id] = data.data.ruta;
+        })
+        .catch(function(err) {
+            // Tratar el error
+        });
+    }, function() {});
+  }
 
 });
