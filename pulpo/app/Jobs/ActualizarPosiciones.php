@@ -32,42 +32,47 @@ class ActualizarPosiciones implements ShouldQueue
      */
     public function handle(MarkerService $markerService)
     {
-      $markers = Redis::smembers('markers');
-      foreach ($markers as $id) {
-        sleep(1);//TODO: esperar en milisegundos
-        $coords = json_decode(Redis::lpop($id));
-        $mark = new \stdClass();
-        $mark->key = $id;
-        $mark->coords = $coords;
-        if(Redis::llen($id) == 0){
-          $destino = $markerService->nuevoPunto();
-          $markerService->generarRuta($id,$coords,$destino);
+      while (Redis::get('switch')=="start") {
+        $markers = Redis::smembers('markers');
+        // $scard = Redis::scard('markers');
+        // $esperar = 1000000 / $scard!=0?$scard:1;
+        foreach ($markers as $id) {
+          usleep(500000);
+          $coords = json_decode(Redis::lpop($id));
+          $mark = new \stdClass();
+          $mark->key = $id;
+          $mark->coords = $coords;
+          if(Redis::llen($id) == 0){
+            $destino = $markerService->nuevoPunto();
+            $markerService->generarRuta($id,$coords,$destino);
+          }
+          Redis::publish('pulso', json_encode($mark));
         }
-        Redis::publish('pulso', json_encode($mark));
+
+        $enServicio = Redis::hkeys('enServicio');
+        // $hlen = Redis::hlen('enServicio');
+        // $esperar = 1000000 / $hlen!=0?$hlen:1;
+        foreach ($enServicio as $element) {
+          usleep(500000);
+          $coords = json_decode(Redis::lpop($element));
+          $mark = new \stdClass();
+          $mark->key = $element;
+          $mark->coords = $coords;
+          Redis::publish('pulso', json_encode($mark));
+          if(Redis::llen($element) == 0){
+            $fijo = Redis::hget('enServicio',$element);
+            Redis::hdel('enServicio',$element);
+            $eliminar= new \stdClass();
+            $eliminar->inicio = $fijo;
+            $eliminar->fin = $element;
+            Redis::publish('delete', json_encode($eliminar));
+          }
+        }
       }
 
-      $enServicio = Redis::hkeys('enServicio');
-      foreach ($enServicio as $element) {
-        sleep(1);//TODO: esperar en milisegundos
-        // usleep(25000) only sleeps for 0.025 seconds.
-        $coords = json_decode(Redis::lpop($element));
-        $mark = new \stdClass();
-        $mark->key = $element;
-        $mark->coords = $coords;
-        Redis::publish('pulso', json_encode($mark));
-        if(Redis::llen($element) == 0){
-          $fijo = Redis::hget('enServicio',$element);
-          Redis::hdel('enServicio',$element);
-          $eliminar= new \stdClass();
-          $eliminar->inicio = $fijo;
-          $eliminar->fin = $element;
-          Redis::publish('delete', json_encode($eliminar));
-        }
-      }
-
-      if(Redis::get('switch')=="start"){
-        $job = new ActualizarPosiciones();
-        dispatch($job);
-      }
+      // if(Redis::get('switch')=="start"){
+      //   $job = new ActualizarPosiciones();
+      //   dispatch($job);
+      // }
     }
 }
