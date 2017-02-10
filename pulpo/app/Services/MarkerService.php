@@ -39,7 +39,7 @@ class MarkerService
     // $enServicio->idFin = $id;
     // $enServicio->id = $cercano;
     // Redis::sadd('enServicio',json_encode($enServicio));
-    Redis::sadd('enServicio',$cercano);
+    Redis::hset('enServicio',$cercano,$id);
     $ruta= new \stdClass();
     $ruta->id = $cercano;
     $ruta->ruta = $pasos;

@@ -76,7 +76,9 @@ pulpo.controller('controlador', function(servicio,socket,$mdSidenav,$mdDialog) {
   ctrl.delete = function(data){
     // console.log(JSON.parse(data));
     jsonData = JSON.parse(data);
-    ctrl.markers[jsonData.key] = jsonData.coords;
+    delete ctrl.markers[jsonData.inicio];
+    delete ctrl.markers[jsonData.fin];
+    delete ctrl.rutas[jsonData.fin];
   };
   socket.on('delete', ctrl.delete);
 
